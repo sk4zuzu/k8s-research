@@ -1,0 +1,15 @@
+
+version: "2"
+
+services:
+  tf:
+    image: tf
+    build:
+      context: ../..
+      dockerfile: local-tools/tf/tf.Dockerfile
+    volumes:
+      - /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock:Z
+      - ../../terraform/k8s-libvirt/:/k8s-libvirt/:Z
+    network_mode: host
+
+# vim:ts=2:sw=2:et:syn=yaml:
