@@ -8,6 +8,6 @@ SELF=$(dirname `readlink -f $0`)
 
 cd $SELF/../local-tools/tf
 
-docker-compose build tf && exec docker-compose run tf
+docker-compose build tf && exec docker-compose run --rm tf
 
 # vim:ts=4:sw=4:et:syn=sh:
