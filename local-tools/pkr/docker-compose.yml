@@ -1,0 +1,15 @@
+
+version: "2"
+
+services:
+  pkr:
+    image: pkr
+    build:
+      context: .
+      dockerfile: pkr.Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:Z
+      - ../../packer/k8s-qemu/:/packer/k8s-qemu/:Z
+    network_mode: host
+
+# vim:ts=2:sw=2:et:syn=yaml:
