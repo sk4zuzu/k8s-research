@@ -2,8 +2,9 @@
 resource "libvirt_domain" "k8s-domain" {
     count = "${var.node-count}"
     name = "k8s-domain.${count.index}"
-    memory = "2048"
-    vcpu = 1
+
+    vcpu = "${var.node-resources["vcpu"]}"
+    memory = "${var.node-resources["memory"]}"
 
     cloudinit = "${element(libvirt_cloudinit.k8s-cloudinit.*.id, count.index)}"
 
@@ -28,17 +29,23 @@ resource "libvirt_domain" "k8s-domain" {
         volume_id = "${element(libvirt_volume.k8s-volume.*.id, count.index)}"
 	}
 
-    provisioner "remote-exec" {
-        connection = {
-            type = "ssh"
-            user = "${var.base-volume["username"]}"
-            private_key = "${var.ssh-provisioning-key}"
-        }
-        inline = [
-            "hostname > /tmp/hostname"
-        ]
+    connection = {
+        type = "ssh"
+        user = "${var.base-volume["username"]}"
+        private_key = "${var.ssh-provisioning-key}"
     }
 
+    provisioner "file" {
+        source = "./scripts/"
+        destination = "/tmp"
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+            "chmod +x /tmp/*.sh",
+            "sudo /tmp/${count.index == 0 ? "master" : "node"}.sh ${var.k8s-token} ${libvirt_domain.k8s-domain.0.network_interface.0.addresses.0}",
+        ]
+    }
 }
 
 # vim:ts=4:sw=4:et:
