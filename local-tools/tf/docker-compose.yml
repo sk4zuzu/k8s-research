@@ -5,11 +5,12 @@ services:
   tf:
     image: tf
     build:
-      context: ../..
-      dockerfile: local-tools/tf/tf.Dockerfile
+      context: .
+      dockerfile: tf.Dockerfile
     volumes:
       - /var/run/libvirt/libvirt-sock:/var/run/libvirt/libvirt-sock:Z
-      - ../../terraform/k8s-libvirt/:/k8s-libvirt/:Z
+      - ../../terraform/k8s-libvirt/:/terraform/k8s-libvirt/:Z
+      - ../../packer/k8s-qemu/:/packer/k8s-qemu/:Z
     network_mode: host
 
 # vim:ts=2:sw=2:et:syn=yaml:

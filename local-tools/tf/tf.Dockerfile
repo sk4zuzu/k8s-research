@@ -10,7 +10,7 @@ RUN apk --no-cache add --virtual .build-deps linux-headers musl-dev libvirt-dev 
 RUN mkdir -p $HOME/.terraform.d/plugins/ \
  && ln -s $GOPATH/bin/terraform-provider-libvirt $HOME/.terraform.d/plugins/
 
-WORKDIR /
+WORKDIR /terraform
 
 ENTRYPOINT ["/bin/sh"]
 
