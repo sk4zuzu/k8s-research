@@ -1,0 +1,12 @@
+
+version: "2"
+
+services:
+  helm:
+    image: helm
+    build:
+      context: .
+      dockerfile: helm.Dockerfile
+    network_mode: host
+
+# vim:ts=2:sw=2:et:syn=yaml:
