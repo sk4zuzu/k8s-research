@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit -o nounset -o pipefail
+set -x
 
 apt-get -q update -y
 
@@ -39,5 +40,12 @@ apt-get -q install -y \
     kubernetes-cni
 
 apt-get -q clean
+
+HELM_VERSION='v2.9.1'
+
+curl -fsSL https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSION}-linux-amd64.tar.gz \
+    | tar -xz -f- -C /usr/local/bin/ --strip-components=1 linux-amd64/helm
+
+sync
 
 # vim:ts=4:sw=4:et:syn=sh:

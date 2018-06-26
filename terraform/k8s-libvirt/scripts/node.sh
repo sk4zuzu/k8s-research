@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit -o nounset -o pipefail
+set -x
 
 TOKEN=$1
 MASTER_IP=$2

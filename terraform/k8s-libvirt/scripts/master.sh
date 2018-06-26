@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
 set -o errexit -o nounset -o pipefail
+set -x
 
 TOKEN=$1
 MASTER_IP=$2
@@ -20,5 +21,7 @@ source /etc/profile.d/kubeconfig.sh
 kubectl create \
     --namespace=kube-system \
     -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+helm init
 
 # vim:ts=4:sw=4:et:syn=sh:

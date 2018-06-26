@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
 
 set -o errexit -o nounset -o pipefail
+set -x
 
-which docker packer
+which docker packer /bin/rm
 
 VERSION="16.04"
-IMAGE="ubuntu-$VERSION-server-cloudimg-amd64-disk1.img"
+IMAGE="ubuntu-${VERSION}-server-cloudimg-amd64-disk1.img"
 CHECKSUM="d4117cab734a48a455377b6ba8ffa427ef5f4509dae79141fb1167e4189f9e88"
 
 DISK_SIZE="$((8*1024))"
@@ -20,7 +21,7 @@ chpasswd:
 
 function cleanup {
     if [ -f $IMAGE.iso ]; then
-        rm -f $IMAGE.iso
+        /bin/rm -f $IMAGE.iso
     fi
 }
 
@@ -53,7 +54,7 @@ packer build -force - <<EOF
       "headless": "true",
 
       "disk_image": "true",
-      "iso_url": "https://cloud-images.ubuntu.com/releases/$VERSION/release/$IMAGE",
+      "iso_url": "https://cloud-images.ubuntu.com/releases/${VERSION}/release/${IMAGE}",
       "iso_checksum": "$CHECKSUM",
       "iso_checksum_type": "sha256",
 
@@ -74,7 +75,7 @@ packer build -force - <<EOF
     {
       "type": "shell",
       "script": "scripts/packages.sh",
-      "execute_command": "sudo '{{ .Path }}'"
+      "execute_command": "sudo -iu root '{{ .Path }}'"
     }
   ]
 }
