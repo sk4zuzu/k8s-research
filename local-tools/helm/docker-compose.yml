@@ -7,6 +7,9 @@ services:
     build:
       context: .
       dockerfile: helm.Dockerfile
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:Z
+      - ../../helm/:/helm/:Z
     network_mode: host
 
 # vim:ts=2:sw=2:et:syn=yaml:

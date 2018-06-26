@@ -15,7 +15,7 @@ RUN curl -fsSL https://storage.googleapis.com/kubernetes-helm/helm-${HELM_VERSIO
  && mv linux-amd64/helm /usr/local/bin \
  && chmod +x /usr/local/bin/helm
 
-WORKDIR /
+WORKDIR /helm
 
 ENTRYPOINT ["/bin/sh"]
 
