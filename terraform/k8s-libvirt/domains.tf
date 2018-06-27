@@ -43,7 +43,7 @@ resource "libvirt_domain" "k8s-domain" {
     provisioner "remote-exec" {
         inline = [
             "chmod +x /tmp/*.sh",
-            "sudo /tmp/${count.index == 0 ? "master" : "node"}.sh ${var.k8s-token} ${libvirt_domain.k8s-domain.0.network_interface.0.addresses.0}",
+            "sudo -iu root /tmp/${count.index == 0 ? "master" : "kubelet"}.sh ${var.k8s-token} ${libvirt_domain.k8s-domain.0.network_interface.0.addresses.0}",
         ]
     }
 }
