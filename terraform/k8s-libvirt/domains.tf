@@ -49,6 +49,10 @@ resource "libvirt_domain" "k8s-master" {
 }
 
 resource "libvirt_domain" "k8s-node" {
+    depends_on = [
+        "libvirt_domain.k8s-master",
+    ]
+
     count = "${var.node-resources["count"]}"
     name = "k8s-node.${count.index}"
 
