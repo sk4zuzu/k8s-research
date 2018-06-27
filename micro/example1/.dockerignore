@@ -1,0 +1,11 @@
+*.swp
+
+proto/*/*.go
+
+api/.gitignore
+api/debug
+api/api
+
+srv?/.gitignore
+srv?/debug
+srv?/srv?

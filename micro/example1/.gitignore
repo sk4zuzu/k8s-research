@@ -1,0 +1,12 @@
+*.swp
+.vscode/
+
+vendor/
+
+proto/*/*.go
+
+srv?/debug
+srv?/srv?
+
+api/debug
+api/api

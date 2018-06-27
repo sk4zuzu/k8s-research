@@ -1,0 +1,62 @@
+version: "2"
+
+services:
+
+  nats:
+    image: nats:1.1.0-linux
+    networks:
+      default:
+        ipv4_address: 172.16.80.110
+
+  srv1:
+    image: "${COMPOSE_PROJECT_NAME}-srv1"
+    build:
+      context: ../
+      dockerfile: docker/srv1.Dockerfile
+    environment: &environment
+      MICRO_REGISTRY: nats
+      MICRO_REGISTRY_ADDRESS: nats:4222
+      MICRO_TRANSPORT: nats
+      MICRO_TRANSPORT_ADDRESS: nats:4222
+    networks:
+      default:
+        ipv4_address: 172.16.80.10
+    depends_on:
+      - nats
+
+  srv2:
+    image: "${COMPOSE_PROJECT_NAME}-srv2"
+    build:
+      context: ../
+      dockerfile: docker/srv2.Dockerfile
+    environment: *environment
+    networks:
+      default:
+        ipv4_address: 172.16.80.20
+    depends_on:
+      - nats
+      - srv1
+
+  api:
+    image: "${COMPOSE_PROJECT_NAME}-api"
+    build:
+      context: ../
+      dockerfile: docker/api.Dockerfile
+    environment:
+      <<: *environment
+      GIN_MODE: release
+    networks:
+      default:
+        ipv4_address: 172.16.80.69
+    depends_on:
+      - nats
+      - srv1
+      - srv2
+
+networks:
+  default:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.16.80.0/24

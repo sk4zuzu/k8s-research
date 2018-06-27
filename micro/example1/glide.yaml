@@ -1,0 +1,13 @@
+package: github.com/sk4zuzu/k8s-research/micro/example1
+import:
+- package: github.com/sirupsen/logrus
+- package: github.com/micro/go-micro
+  subpackages:
+  - client
+  - server
+- package: github.com/micro/protobuf
+  subpackages:
+  - proto
+  - protoc-gen-go
+- package: github.com/micro/go-web
+- package: github.com/gin-gonic/gin
