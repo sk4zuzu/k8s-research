@@ -1,12 +1,22 @@
 
-variable "node-count" {
-    default = 3
+variable "master-resources" {
+    default = {
+        "count" = 1
+        "vcpu" = 1
+        "memory" = "2048"
+    }
 }
 
 variable "node-resources" {
     default = {
+        "count" = 2
         "vcpu" = 1
         "memory" = "3072"
+    }
+}
+
+variable "network" {
+    default = {
         "domain" = "k8s.local"
         "subnet" = "10.11.12.0/24"
     }

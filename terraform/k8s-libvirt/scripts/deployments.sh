@@ -3,11 +3,23 @@
 set -o errexit -o nounset -o pipefail
 set -x
 
-kubectl rollout \
-    status \
+source /etc/profile.d/kubeconfig.sh
+
+kubectl create \
+    serviceaccount \
     --namespace="kube-system" \
-    --watch="true" \
-     deployment/tiller-deploy
+    tiller
+
+kubectl create \
+    clusterrolebinding \
+    tiller-cluster-rule \
+    --clusterrole="cluster-admin" \
+    --serviceaccount="kube-system:tiller"
+
+helm init \
+    --service-account="tiller" \
+    --upgrade \
+    --wait
 
 helm repo update
 

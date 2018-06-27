@@ -6,9 +6,15 @@ resource "libvirt_volume" "k8s-ubuntu-qcow2" {
     format = "qcow2"
 }
 
-resource "libvirt_volume" "k8s-volume" {
-    count = "${var.node-count}"
-    name = "k8s-volume.${count.index}"
+resource "libvirt_volume" "k8s-master" {
+    count = "${var.master-resources["count"]}"
+    name = "k8s-master.${count.index}"
+    base_volume_id = "${libvirt_volume.k8s-ubuntu-qcow2.id}"
+}
+
+resource "libvirt_volume" "k8s-node" {
+    count = "${var.node-resources["count"]}"
+    name = "k8s-node.${count.index}"
     base_volume_id = "${libvirt_volume.k8s-ubuntu-qcow2.id}"
 }
 

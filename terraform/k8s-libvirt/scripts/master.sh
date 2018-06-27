@@ -22,19 +22,4 @@ kubectl create \
     --namespace="kube-system" \
     -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
 
-kubectl create \
-    serviceaccount \
-    --namespace="kube-system" \
-    tiller
-
-kubectl create \
-    clusterrolebinding \
-    tiller-cluster-rule \
-    --clusterrole="cluster-admin" \
-    --serviceaccount="kube-system:tiller"
-
-helm init \
-    --service-account="tiller" \
-    --upgrade
-
 # vim:ts=4:sw=4:et:syn=sh:
