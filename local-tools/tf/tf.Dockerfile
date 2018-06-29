@@ -9,10 +9,6 @@ RUN apk --no-cache add --virtual .build-deps linux-headers musl-dev libvirt-dev 
  && go get github.com/mcuadros/terraform-provider-helm \
  && apk --no-cache del .build-deps
 
-RUN mkdir -p $HOME/.terraform.d/plugins/ \
- && ln -s $GOPATH/bin/terraform-provider-libvirt $HOME/.terraform.d/plugins/ \
- && ln -s $GOPATH/bin/terraform-provider-helm    $HOME/.terraform.d/plugins/
-
 WORKDIR /terraform
 
 ENTRYPOINT ["/bin/sh"]
