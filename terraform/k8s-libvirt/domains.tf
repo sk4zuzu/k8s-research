@@ -32,7 +32,7 @@ resource "libvirt_domain" "k8s-master" {
     connection = {
         type = "ssh"
         user = "${var.base-volume["username"]}"
-        private_key = "${var.ssh-provisioning-key}"
+        private_key = "${file("ssh-provisioning-key")}"
     }
 
     provisioner "file" {
@@ -85,7 +85,7 @@ resource "libvirt_domain" "k8s-node" {
     connection = {
         type = "ssh"
         user = "${var.base-volume["username"]}"
-        private_key = "${var.ssh-provisioning-key}"
+        private_key = "${file("ssh-provisioning-key")}"
     }
 
     provisioner "file" {
@@ -111,19 +111,41 @@ resource "null_resource" "deployments" {
         type = "ssh"
         host = "${libvirt_domain.k8s-master.0.network_interface.0.addresses.0}"
         user = "${var.base-volume["username"]}"
-        private_key = "${var.ssh-provisioning-key}"
+        private_key = "${file("ssh-provisioning-key")}"
     }
 
     provisioner "file" {
-        source = "./scripts/deployments.sh"
-        destination = "/tmp/deployments.sh"
+        source = "./scripts/helm.sh"
+        destination = "/tmp/helm.sh"
     }
 
     provisioner "remote-exec" {
         inline = [
-            "chmod +x /tmp/deployments.sh",
-            "sudo -iu root /tmp/deployments.sh",
+            "chmod +x /tmp/helm.sh",
+            "sudo -iu root /tmp/helm.sh init",
+            "sudo -iu root /tmp/helm.sh install",
         ]
+    }
+}
+
+resource "null_resource" "kubeconfig" {
+    depends_on = [
+        "libvirt_domain.k8s-master",
+        "null_resource.deployments",
+    ]
+
+    provisioner "local-exec" {
+        command = <<-EOF
+        rsync \
+            -chavzP \
+            --rsh='ssh -i ssh-provisioning-key -o StrictHostKeyChecking=no' \
+            --rsync-path='sudo rsync' \
+            $REMOTE:/etc/kubernetes/admin.conf \
+            .
+        EOF
+        environment {
+            REMOTE = "ubuntu@${libvirt_domain.k8s-master.0.network_interface.0.addresses.0}"
+        }
     }
 }
 
