@@ -10,6 +10,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:Z
       - ../../helm/:/helm/:Z
+      - ../../terraform/k8s-libvirt/:/terraform/k8s-libvirt/:Z
     network_mode: host
 
 # vim:ts=2:sw=2:et:syn=yaml:
