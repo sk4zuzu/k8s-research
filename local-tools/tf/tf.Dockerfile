@@ -1,7 +1,7 @@
 
 FROM hashicorp/terraform:full
 
-RUN apk --no-cache add libvirt-client cdrkit openssh-client rsync
+RUN apk --no-cache add libvirt-client cdrkit openssh-client rsync curl
 
 RUN apk --no-cache add --virtual .build-deps linux-headers musl-dev libvirt-dev gcc \
  && go get github.com/terraform-providers/terraform-provider-null \
