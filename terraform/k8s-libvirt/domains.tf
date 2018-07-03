@@ -1,5 +1,9 @@
 
 resource "libvirt_domain" "k8s-master" {
+    depends_on = [
+        "libvirt_cloudinit.k8s-master",
+    ]
+
     count = "${var.master-resources["count"]}"
     name = "k8s-master.${count.index}"
 
@@ -50,6 +54,7 @@ resource "libvirt_domain" "k8s-master" {
 
 resource "libvirt_domain" "k8s-node" {
     depends_on = [
+        "libvirt_cloudinit.k8s-node",
         "libvirt_domain.k8s-master",
     ]
 
@@ -117,6 +122,11 @@ resource "null_resource" "deployments" {
     provisioner "file" {
         source = "./scripts/helm.sh"
         destination = "/tmp/helm.sh"
+    }
+
+    provisioner "file" {
+        source = "./scripts/helm.d"
+        destination = "/tmp"
     }
 
     provisioner "remote-exec" {

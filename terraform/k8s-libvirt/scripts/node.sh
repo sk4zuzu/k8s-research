@@ -6,7 +6,6 @@ set -x
 TOKEN=$1
 MASTER_IP=$2
 
-kubeadm reset --force
 kubeadm join \
     --token="$TOKEN" \
     --discovery-token-unsafe-skip-ca-verification \

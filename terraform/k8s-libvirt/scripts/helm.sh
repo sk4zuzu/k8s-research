@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
 
+: ${COMMAND:=$1}
+
 set -o errexit -o nounset -o pipefail
 set -x
 
@@ -27,15 +29,16 @@ function helm_install {
     helm repo add incubator http://storage.googleapis.com/kubernetes-charts-incubator
     helm repo update
 
-    helm install --wait stable/docker-registry
-    helm install --wait stable/nats
+    for SCRIPT in /tmp/helm.d/*.sh; do
+        chmod +x $SCRIPT && $SCRIPT
+    done
 }
 
 function helm_purge {
     helm delete $(helm ls --short)
 }
 
-case $1 in
+case $COMMAND in
     init)
         helm_init
     ;;

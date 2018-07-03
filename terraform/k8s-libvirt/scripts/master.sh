@@ -6,7 +6,6 @@ set -x
 TOKEN=$1
 MASTER_IP=$2
 
-kubeadm reset --force
 kubeadm init \
     --token="$TOKEN" \
     --apiserver-advertise-address="$MASTER_IP" \
