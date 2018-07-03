@@ -74,7 +74,17 @@ packer build -force - <<EOF
   "provisioners": [
     {
       "type": "shell",
-      "script": "scripts/packages.sh",
+      "script": "scripts/01-basics.sh",
+      "execute_command": "sudo -iu root '{{ .Path }}'"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/02-docker.sh",
+      "execute_command": "sudo -iu root '{{ .Path }}'"
+    },
+    {
+      "type": "shell",
+      "script": "scripts/03-kubernetes.sh",
       "execute_command": "sudo -iu root '{{ .Path }}'"
     }
   ]
